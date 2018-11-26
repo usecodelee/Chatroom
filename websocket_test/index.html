@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebSocket</title>
+</head>
+
+<body>
+    <input type="text" id="textSend">
+    <input type="button" value="提交" id="btn">
+    <label id="textRes"></label>
+</body>
+
+</html>
+<script>
+    let $textSend = document.querySelector('#textSend');
+    let $btn = document.querySelector('#btn');
+    $btn.addEventListener('click', (ev) => {
+        sendToServer();
+    });
+
+    function sendToServer() {
+        let ws = new WebSocket('ws://localhost:9999');
+        let text = $textSend.value;
+        // onopen是客户端与服务端建立连接后触发
+        ws.onopen = () => {
+            ws.send(text);
+        };
+        // onmessage是当服务端给客户端发来消息的时候触发
+        ws.onmessage = (res) => {
+            console.log(res); // MessageEvent对象
+            let $textRes = document.querySelector('#textRes');
+            $textRes.innerHTML = res.data;
+        };
+    }
+</script>
